@@ -1,9 +1,6 @@
 @extends('master')
 
 @section('content')
-<div class="min-h-screen text-green-900 m-0 p-0 bg-center bg-cover flex items-center justify-center" 
-     style="background-image: url('{{ asset('Imagens/bg.png') }}')">
-
   <div class="max-w-lg w-full mx-4 my-4 p-6 bg-white/30 border-2 border-gray-300/30 rounded-xl shadow-md backdrop-blur-xl">
 
     <!-- Cabeçalho com botão voltar e título -->

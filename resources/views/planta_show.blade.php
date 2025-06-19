@@ -1,9 +1,6 @@
 @extends('master')
 
 @section('content')
-<div class="min-h-screen text-green-900 m-0 p-0 bg-center bg-cover flex items-center justify-center"
-     style="background-image: url('{{ asset('Imagens/bg.png') }}')">
-
   <div class="max-w-4xl w-full mx-4 my-4 p-6 bg-white/30 border-2 border-gray-300/30 rounded-xl shadow-md backdrop-blur-xl flex gap-6">
 
     <!-- Foto da planta -->
@@ -53,9 +50,8 @@
 
   <script>
     document.getElementById('btnVoltar').addEventListener('click', () => {
-      window.history.back();
+      window.location.href = '{{ route('plantas.index') }}';
     });
-
     // AJAX para excluir planta
     document.getElementById('formExcluir').addEventListener('submit', async function(event) {
       event.preventDefault();
