@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Planta;
+use Illuminate\Support\Facades\Storage;
 
 class PlantaController extends Controller
 {
@@ -104,9 +105,41 @@ class PlantaController extends Controller
     /**
      * Update the specified resource in storage.
      */
+/**
+ * Update the specified resource in storage.
+ */
     public function update(Request $request, string $id)
     {
-        $updated = $this->planta->where('id', $id)->update($request->except(['_token', '_method']));
+        $planta = Planta::findOrFail($id);
+
+        // Validação (opcional, mas recomendado)
+        $request->validate([
+            'nome' => 'required|string|max:100',
+            'nome_cientifico' => 'nullable|string|max:150',
+            'descricao' => 'nullable|string',
+            'foto' => 'nullable|image|max:5120', // até 5MB
+        ]);
+
+        // Prepara os dados
+        $dados = [
+            'nome' => $request->input('nome'),
+            'nome_cientifico' => $request->input('nome_cientifico'),
+            'descricao' => $request->input('descricao'),
+        ];
+
+        // Verifica se há uma nova imagem para atualizar
+        if ($request->hasFile('foto')) {
+            // Deleta a imagem antiga se existir
+            if ($planta->foto) {
+                Storage::disk('public')->delete($planta->foto);
+            }
+            
+            // Armazena a nova imagem
+            $dados['foto'] = $request->file('foto')->store('plantas', 'public');
+        }
+
+        // Atualiza os dados da planta
+        $updated = $planta->update($dados);
 
         if ($updated) {
             return redirect()->back()->with('message', 'Planta atualizada com sucesso');
@@ -114,6 +147,7 @@ class PlantaController extends Controller
 
         return redirect()->back()->with('message', 'Erro ao atualizar planta');
     }
+
 
     /**
      * Remove the specified resource from storage.
